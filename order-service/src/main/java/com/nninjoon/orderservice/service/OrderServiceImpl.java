@@ -2,8 +2,6 @@ package com.nninjoon.orderservice.service;
 
 import java.util.UUID;
 
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 
 import com.nninjoon.orderservice.domain.OrderEntity;
@@ -19,24 +17,20 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public OrderDto createOrder(OrderDto orderDto) {
-		orderDto.setOrderId(UUID.randomUUID().toString());
-		orderDto.setTotalPrice(orderDto.getQty() * orderDto.getUnitPrice());
+		String orderId = UUID.randomUUID().toString();
+		int totalPrice = orderDto.qty() * orderDto.unitPrice();
 
-		ModelMapper mapper = new ModelMapper();
-		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		OrderEntity orderEntity = mapper.map(orderDto, OrderEntity.class);
+		OrderEntity orderEntity = OrderEntity.create(orderDto.productId(), orderDto.qty(), orderDto.unitPrice(), totalPrice, orderDto.userId(), orderId);
 
 		orderRepository.save(orderEntity);
 
-		OrderDto returnValue = mapper.map(orderEntity, OrderDto.class);
-
-		return returnValue;
+		return OrderDto.from(orderEntity);
 	}
 
 	@Override
 	public OrderDto getOrderByOrderId(String orderId) {
 		OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
-		OrderDto orderDto = new ModelMapper().map(orderEntity, OrderDto.class);
+		OrderDto orderDto = OrderDto.from(orderEntity);
 
 		return orderDto;
 	}

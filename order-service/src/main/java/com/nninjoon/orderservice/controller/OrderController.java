@@ -1,19 +1,19 @@
 package com.nninjoon.orderservice.controller;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.nninjoon.orderservice.domain.OrderEntity;
 import com.nninjoon.orderservice.dto.OrderDto;
@@ -22,6 +22,9 @@ import com.nninjoon.orderservice.messagequeue.OrderProducer;
 import com.nninjoon.orderservice.service.OrderService;
 import com.nninjoon.orderservice.vo.RequestOrder;
 import com.nninjoon.orderservice.vo.ResponseOrder;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/order-service")
@@ -43,19 +46,21 @@ public class OrderController {
 	@PostMapping("/{userId}/orders")
 	public ResponseEntity<ResponseOrder> createOrder(@PathVariable("userId") String userId,
 		@RequestBody RequestOrder orderDetails) {
+		int totalPrice = orderDetails.getUnitPrice() * orderDetails.getQty();
+		String orderId = UUID.randomUUID().toString();
 		log.info("Before add orders data");
-		ModelMapper mapper = new ModelMapper();
-		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-		OrderDto orderDto = mapper.map(orderDetails, OrderDto.class);
-		orderDto.setUserId(userId);
+		OrderEntity orderEntity = OrderEntity.create(orderDetails.getProductId(), orderDetails.getQty(),
+			orderDetails.getUnitPrice(),totalPrice, userId, orderId);
+
+		OrderDto orderDto = OrderDto.from(orderEntity);
 		/* jpa */
 		OrderDto createdOrder = orderService.createOrder(orderDto);
-		ResponseOrder responseOrder = mapper.map(createdOrder, ResponseOrder.class);
+		ResponseOrder responseOrder = ResponseOrder.from(orderEntity);
 
-		/* kafka */
-		orderDto.setOrderId(UUID.randomUUID().toString());
-		orderDto.setTotalPrice(orderDetails.getQty() * orderDetails.getUnitPrice());
+		// /* kafka */
+		// orderDto.setOrderId(UUID.randomUUID().toString());
+		// orderDto.setTotalPrice(orderDetails.getQty() * orderDetails.getUnitPrice());
 
 		/* send this order to the kafka */
 		//        kafkaProducer.send("example-catalog-topic", orderDto);
@@ -73,8 +78,8 @@ public class OrderController {
 		Iterable<OrderEntity> orderList = orderService.getOrdersByUserId(userId);
 
 		List<ResponseOrder> result = new ArrayList<>();
-		orderList.forEach(v -> {
-			result.add(new ModelMapper().map(v, ResponseOrder.class));
+		orderList.forEach(order -> {
+			result.add(ResponseOrder.from(order));
 		});
 
 		try {

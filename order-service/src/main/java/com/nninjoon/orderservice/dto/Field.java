@@ -1,12 +1,18 @@
 package com.nninjoon.orderservice.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
 
-@Data
-@AllArgsConstructor
-public class Field {
-	private String type;
-	private boolean optional;
-	private String field;
+@Builder
+public record Field(
+	String type,
+	boolean optional,
+	String field
+) {
+	public static Field of(String type, boolean optional, String field) {
+		return Field.builder()
+			.type(type)
+			.field(field)
+			.optional(optional)
+			.build();
+	}
 }

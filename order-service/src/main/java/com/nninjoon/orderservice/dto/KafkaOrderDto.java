@@ -1,13 +1,18 @@
 package com.nninjoon.orderservice.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
 
 import java.io.Serializable;
 
-@Data
-@AllArgsConstructor
-public class KafkaOrderDto implements Serializable {
-	private Schema schema;
-	private Payload payload;
+@Builder
+public record KafkaOrderDto(
+	Schema schema,
+	Payload payload
+) implements Serializable {
+	public static KafkaOrderDto of(Schema schema, Payload payload) {
+		return KafkaOrderDto.builder()
+			.schema(schema)
+			.payload(payload)
+			.build();
+	}
 }

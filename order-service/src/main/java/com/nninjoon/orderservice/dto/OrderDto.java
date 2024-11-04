@@ -1,16 +1,29 @@
 package com.nninjoon.orderservice.dto;
 
-import lombok.Data;
-
 import java.io.Serializable;
 
-@Data
-public class OrderDto implements Serializable {
-	private String productId;
-	private Integer qty;
-	private Integer unitPrice;
-	private Integer totalPrice;
+import com.nninjoon.orderservice.domain.OrderEntity;
 
-	private String orderId;
-	private String userId;
+import lombok.Builder;
+
+@Builder
+public record OrderDto(
+	String productId,
+	Integer qty,
+	Integer unitPrice,
+	Integer totalPrice,
+
+	String orderId,
+	String userId
+) implements Serializable {
+	public static OrderDto from(OrderEntity order) {
+		return OrderDto.builder()
+			.productId(order.getProductId())
+			.qty(order.getQty())
+			.unitPrice(order.getUnitPrice())
+			.totalPrice(order.getTotalPrice())
+			.orderId(order.getOrderId())
+			.totalPrice(order.getTotalPrice())
+			.build();
+	}
 }

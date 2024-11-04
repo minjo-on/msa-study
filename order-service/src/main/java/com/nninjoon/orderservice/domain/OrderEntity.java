@@ -1,20 +1,27 @@
 package com.nninjoon.orderservice.domain;
 
+import java.io.Serializable;
+import java.util.Date;
+
+import org.hibernate.annotations.ColumnDefault;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
-
-import java.io.Serializable;
-import java.util.Date;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name="orders")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,4 +45,15 @@ public class OrderEntity implements Serializable {
 	@Column(nullable = false, updatable = false, insertable = false)
 	@ColumnDefault(value = "CURRENT_TIMESTAMP")
 	private Date createdAt;
+
+	public static OrderEntity create(String productId, Integer qty, Integer unitPrice, Integer totalPrice, String userId, String orderId) {
+		return OrderEntity.builder()
+			.productId(productId)
+			.qty(qty)
+			.unitPrice(unitPrice)
+			.totalPrice(totalPrice)
+			.userId(userId)
+			.orderId(orderId)
+			.build();
+	}
 }

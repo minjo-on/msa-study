@@ -1,15 +1,14 @@
 package com.nninjoon.orderservice.dto;
 
-import lombok.Builder;
-import lombok.Data;
-
 import java.util.List;
 
-@Data
+import lombok.Builder;
+
 @Builder
-public class Schema {
-	private String type;
-	private List<Field> fields;
-	private boolean optional;
-	private String name;
+public record Schema(
+	String type,
+	List<Field> fields,
+	boolean optional,
+	String name
+) {
 }
