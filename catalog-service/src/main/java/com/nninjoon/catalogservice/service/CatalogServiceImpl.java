@@ -1,9 +1,11 @@
 package com.nninjoon.catalogservice.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import com.nninjoon.catalogservice.domain.CatalogEntity;
 import com.nninjoon.catalogservice.repository.CatalogRepository;
+import com.nninjoon.catalogservice.vo.ResponseCatalog;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,7 +15,9 @@ public class CatalogServiceImpl implements CatalogService {
 	private final CatalogRepository catalogRepository;
 
 	@Override
-	public Iterable<CatalogEntity> getAllCatalogs() {
-		return catalogRepository.findAll();
+	public List<ResponseCatalog> getAllCatalogs() {
+		return catalogRepository.findAll().stream()
+			.map(ResponseCatalog::from)
+			.toList();
 	}
 }

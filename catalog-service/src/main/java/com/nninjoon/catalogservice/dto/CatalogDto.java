@@ -2,15 +2,17 @@ package com.nninjoon.catalogservice.dto;
 
 import java.io.Serializable;
 
-import lombok.Data;
+import lombok.Builder;
 
-@Data
-public class CatalogDto implements Serializable {
-	private String productId;
-	private Integer qty;
-	private Integer unitPrice;
-	private Integer totalPrice;
+@Builder
+public record CatalogDto(
+	String productId,
+	int qty,
+	int unitPrice,
+	int totalPrice,
 
-	private String orderId;
-	private String userId;
+	String orderId,
+	String userId
+) implements Serializable {
+
 }

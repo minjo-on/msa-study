@@ -1,15 +1,12 @@
 package com.nninjoon.catalogservice.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nninjoon.catalogservice.domain.CatalogEntity;
 import com.nninjoon.catalogservice.service.CatalogService;
 import com.nninjoon.catalogservice.vo.ResponseCatalog;
 
@@ -29,13 +26,7 @@ public class CatalogController {
 
 	@GetMapping("/catalogs")
 	public ResponseEntity<List<ResponseCatalog>> getAllCatalogs() {
-		Iterable<CatalogEntity> catalogEntities = catalogService.getAllCatalogs();
-
-		List<ResponseCatalog> result = new ArrayList<>();
-		catalogEntities.forEach(catalogEntity ->
-			result.add(new ModelMapper().map(catalogEntity, ResponseCatalog.class))
-		);
-
+		List<ResponseCatalog> result = catalogService.getAllCatalogs();
 		return ResponseEntity.ok(result);
 	}
 }
