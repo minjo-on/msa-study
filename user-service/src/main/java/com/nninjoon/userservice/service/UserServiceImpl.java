@@ -49,6 +49,7 @@ public class UserServiceImpl implements UserService {
 
 		UserDto userDto = UserDto.from(userEntity);
 
+		String orderUrl = "http://localhost:8000/order-service/%s/orders";
 		return userDto;
 	}
 

@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TokenProvider {
 	private final JwtProperties jwtProperties;
+	private final Environment env;
 
 	public String generateToken(String userId, Duration expiredAt) {
 		Date now = new Date();
@@ -37,14 +39,14 @@ public class TokenProvider {
 			.setExpiration(expiry)
 			.setSubject(userId)
 			.claim("userId", userId)
-			.signWith(HS256, jwtProperties.getSecretKey())
+			.signWith(HS256, env.getProperty("token.secret"))
 			.compact();
 	}
 
 	public boolean validateToken(String token) {
 		try {
 			Jwts.parser()
-				.setSigningKey(jwtProperties.getSecretKey())
+				.setSigningKey(env.getProperty("token.secret"))
 				.parseClaimsJws(token);
 			return true;
 		} catch (Exception e) {

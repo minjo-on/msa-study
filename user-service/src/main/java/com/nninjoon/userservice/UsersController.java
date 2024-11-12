@@ -27,8 +27,8 @@ import com.nninjoon.userservice.vo.ResponseUser;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/user-service")
 @RequiredArgsConstructor
+@RequestMapping("/")
 public class UsersController {
 
 	private final Greeting greeting;
@@ -37,8 +37,12 @@ public class UsersController {
 
 	@GetMapping("/health_check")
 	public String status(){
-		return String.format("It's Working in User Service on PORT %s",
-			env.getProperty("local.server.port"));
+		return String.format("It's Working in User Service"
+			+ ", PORT(local.server.port)=" + env.getProperty("local.server.port")
+			+ ", PORT(server.port)=" + env.getProperty("server.port")
+			+ ", jwt.issuer=" + env.getProperty("jwt.issuer")
+			+ ", jwt.secretKey=" + env.getProperty("jwt.secretKey")
+			+ ", token.secret=" + env.getProperty("token.secret"));
 	}
 
 	@GetMapping("/welcome")

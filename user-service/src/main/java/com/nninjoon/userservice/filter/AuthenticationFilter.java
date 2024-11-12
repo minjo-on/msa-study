@@ -26,7 +26,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	public AuthenticationFilter(TokenProvider tokenProvider) {
 		this.tokenProvider = tokenProvider;
-		setFilterProcessesUrl("/user-service/login");
+		setFilterProcessesUrl("/login");
 	}
 
 	@Override
