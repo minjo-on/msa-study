@@ -9,9 +9,11 @@ import com.nninjoon.orderservice.dto.OrderDto;
 import com.nninjoon.orderservice.repository.OrderRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderServiceImpl implements OrderService {
 	private final OrderRepository orderRepository;
 
@@ -21,9 +23,8 @@ public class OrderServiceImpl implements OrderService {
 		int totalPrice = orderDto.qty() * orderDto.unitPrice();
 
 		OrderEntity orderEntity = OrderEntity.create(orderDto.productId(), orderDto.qty(), orderDto.unitPrice(), totalPrice, orderDto.userId(), orderId);
-
 		orderRepository.save(orderEntity);
-
+		log.info("Order createdAt: {}", orderEntity.getCreatedAt());
 		return OrderDto.from(orderEntity);
 	}
 

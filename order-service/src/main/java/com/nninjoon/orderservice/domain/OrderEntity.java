@@ -1,9 +1,7 @@
 package com.nninjoon.orderservice.domain;
 
 import java.io.Serializable;
-import java.util.Date;
-
-import org.hibernate.annotations.ColumnDefault;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,9 +40,8 @@ public class OrderEntity implements Serializable {
 	@Column(nullable = false, unique = true)
 	private String orderId;
 
-	@Column(nullable = false, updatable = false, insertable = false)
-	@ColumnDefault(value = "CURRENT_TIMESTAMP")
-	private Date createdAt;
+	@Column(nullable = false, updatable = false)
+	private LocalDateTime createdAt;
 
 	public static OrderEntity create(String productId, Integer qty, Integer unitPrice, Integer totalPrice, String userId, String orderId) {
 		return OrderEntity.builder()
@@ -54,6 +51,7 @@ public class OrderEntity implements Serializable {
 			.totalPrice(totalPrice)
 			.userId(userId)
 			.orderId(orderId)
+			.createdAt(LocalDateTime.now())
 			.build();
 	}
 }

@@ -2,7 +2,6 @@ package com.nninjoon.orderservice.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 import org.springframework.core.env.Environment;
@@ -46,6 +45,7 @@ public class OrderController {
 	@PostMapping("/{userId}/orders")
 	public ResponseEntity<ResponseOrder> createOrder(@PathVariable("userId") String userId,
 		@RequestBody RequestOrder orderDetails) {
+
 		int totalPrice = orderDetails.getUnitPrice() * orderDetails.getQty();
 		String orderId = UUID.randomUUID().toString();
 		log.info("Before add orders data");
@@ -81,17 +81,6 @@ public class OrderController {
 		orderList.forEach(order -> {
 			result.add(ResponseOrder.from(order));
 		});
-
-		try {
-			Random rnd = new Random();
-			int value = rnd.nextInt(3);
-			if (value % 2 == 0) {
-				Thread.sleep(10000);
-				throw new Exception("장애 발생");
-			}
-		} catch(InterruptedException ex) {
-			log.warn(ex.getMessage());
-		}
 
 		log.info("Add retrieved orders data");
 

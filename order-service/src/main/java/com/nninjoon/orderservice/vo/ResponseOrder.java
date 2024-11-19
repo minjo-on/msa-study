@@ -1,6 +1,6 @@
 package com.nninjoon.orderservice.vo;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.nninjoon.orderservice.domain.OrderEntity;
@@ -14,7 +14,7 @@ public record ResponseOrder(
 	Integer qty,
 	Integer unitPrice,
 	Integer totalPrice,
-	Date createdAt,
+	LocalDateTime createdAt,
 
 	String orderId
 ) {

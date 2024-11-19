@@ -23,7 +23,7 @@ public record OrderDto(
 			.unitPrice(order.getUnitPrice())
 			.totalPrice(order.getTotalPrice())
 			.orderId(order.getOrderId())
-			.totalPrice(order.getTotalPrice())
+			.userId(order.getUserId())
 			.build();
 	}
 }
