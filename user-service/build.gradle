@@ -81,6 +81,9 @@ dependencies {
     // DevTools - 개발 시 자동 재시작, 캐시 비우기 등 개발자 편의 기능 제공
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
+    // 서비스 간 통신 관련 의존성
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
     // 테스트 관련 의존성
     // Spring Boot Test - 통합 테스트 및 Mocking 기능 제공
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
