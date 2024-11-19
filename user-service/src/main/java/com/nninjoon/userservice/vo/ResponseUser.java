@@ -16,11 +16,12 @@ public record ResponseUser(
 
 	List<ResponseOrder> orders
 ) {
-	public static ResponseUser from(UserEntity user){
+	public static ResponseUser from(UserEntity user, List<ResponseOrder> orders){
 		return ResponseUser.builder()
 			.email(user.getEmail())
 			.name(user.getName())
 			.userId(user.getUserId())
+			.orders(orders)
 			.build();
 	}
 }

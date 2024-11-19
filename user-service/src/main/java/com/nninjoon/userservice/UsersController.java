@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
-import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nninjoon.userservice.domain.UserEntity;
-import com.nninjoon.userservice.dto.UserDto;
 import com.nninjoon.userservice.service.UserService;
 import com.nninjoon.userservice.vo.Greeting;
 import com.nninjoon.userservice.vo.RequestUser;
@@ -72,9 +69,6 @@ public class UsersController {
 
 	@GetMapping("/users/{userId}")
 	public ResponseEntity<ResponseUser> getUser(@PathVariable String userId){
-		UserDto userDto = userService.getUserById(userId);
-		ResponseUser responseUser = new ModelMapper().map(userDto, ResponseUser.class);
-
-		return ResponseEntity.ok(responseUser);
+		return ResponseEntity.ok(userService.getUserById(userId));
 	}
 }

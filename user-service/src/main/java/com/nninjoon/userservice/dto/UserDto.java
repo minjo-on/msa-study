@@ -30,4 +30,9 @@ public record UserDto(
 			.orders(new ArrayList<>())
 			.build();
 	}
+
+	public UserDto withOrders(List<ResponseOrder> orders) {
+		return new UserDto(
+			this.email, this.password, this.name, this.userId, this.createdAt, this.encryptedPwd, orders);
+	}
 }

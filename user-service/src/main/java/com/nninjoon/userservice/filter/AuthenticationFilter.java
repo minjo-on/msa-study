@@ -16,7 +16,6 @@ import com.nninjoon.userservice.jwt.TokenProvider;
 import com.nninjoon.userservice.vo.RequestLogin;
 
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

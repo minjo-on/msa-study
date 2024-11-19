@@ -3,19 +3,34 @@ package com.nninjoon.userservice;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.cloud.openfeign.FeignErrorDecoderFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
+import com.nninjoon.userservice.error.FeignErrorDecoder;
+
+import feign.Logger;
+import feign.codec.ErrorDecoder;
+
 @SpringBootApplication
 @EnableDiscoveryClient
+@EnableFeignClients
 public class UserServiceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(UserServiceApplication.class, args);
 	}
 
+	// @Bean  RestTemplate 사용 코드
+	// @LoadBalanced
+	// public RestTemplate restTemplate() {
+	// 	return new RestTemplate();
+	// }
+
 	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
+	public Logger.Level feignLoggerLevel() {
+		return Logger.Level.FULL;
 	}
 }
