@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.nninjoon.orderservice.domain.OrderEntity;
 import com.nninjoon.orderservice.dto.OrderDto;
 import com.nninjoon.orderservice.repository.OrderRepository;
+import com.nninjoon.orderservice.vo.RequestOrder;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,14 +19,14 @@ public class OrderServiceImpl implements OrderService {
 	private final OrderRepository orderRepository;
 
 	@Override
-	public OrderDto createOrder(OrderDto orderDto) {
+	public OrderEntity createOrder(RequestOrder request, String userId) {
 		String orderId = UUID.randomUUID().toString();
-		int totalPrice = orderDto.qty() * orderDto.unitPrice();
+		int totalPrice = request.qty() * request.unitPrice();
 
-		OrderEntity orderEntity = OrderEntity.create(orderDto.productId(), orderDto.qty(), orderDto.unitPrice(), totalPrice, orderDto.userId(), orderId);
+		OrderEntity orderEntity = OrderEntity.create(request.productId(), request.qty(), request.unitPrice(), totalPrice, userId, orderId);
 		orderRepository.save(orderEntity);
 		log.info("Order createdAt: {}", orderEntity.getCreatedAt());
-		return OrderDto.from(orderEntity);
+		return orderEntity;
 	}
 
 	@Override

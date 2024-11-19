@@ -2,7 +2,6 @@ package com.nninjoon.orderservice.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -44,29 +43,19 @@ public class OrderController {
 
 	@PostMapping("/{userId}/orders")
 	public ResponseEntity<ResponseOrder> createOrder(@PathVariable("userId") String userId,
-		@RequestBody RequestOrder orderDetails) {
+		@RequestBody RequestOrder request) {
 
-		int totalPrice = orderDetails.getUnitPrice() * orderDetails.getQty();
-		String orderId = UUID.randomUUID().toString();
 		log.info("Before add orders data");
-
-		OrderEntity orderEntity = OrderEntity.create(orderDetails.getProductId(), orderDetails.getQty(),
-			orderDetails.getUnitPrice(),totalPrice, userId, orderId);
+		/* jpa */
+		OrderEntity orderEntity = orderService.createOrder(request, userId);
 
 		OrderDto orderDto = OrderDto.from(orderEntity);
-		/* jpa */
-		OrderDto createdOrder = orderService.createOrder(orderDto);
 		ResponseOrder responseOrder = ResponseOrder.from(orderEntity);
 
-		// /* kafka */
-		// orderDto.setOrderId(UUID.randomUUID().toString());
-		// orderDto.setTotalPrice(orderDetails.getQty() * orderDetails.getUnitPrice());
-
+		/* kafka */
 		/* send this order to the kafka */
-		//        kafkaProducer.send("example-catalog-topic", orderDto);
-		//        orderProducer.send("orders", orderDto);
-
-		//        ResponseOrder responseOrder = mapper.map(orderDto, ResponseOrder.class);
+		kafkaProducer.send("example-catalog-topic", orderDto);
+		orderProducer.send("orders", orderDto);
 
 		log.info("After added orders data");
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseOrder);
