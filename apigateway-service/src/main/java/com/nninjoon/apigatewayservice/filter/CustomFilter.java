@@ -1,7 +1,5 @@
 package com.nninjoon.apigatewayservice.filter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -13,7 +11,7 @@ import reactor.core.publisher.Mono;
 
 @Component
 @Slf4j
-public class  CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Config> {
+public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Config> {
 
 	public CustomFilter() {
 		super(Config.class);
