@@ -36,4 +36,11 @@ public class CatalogEntity implements Serializable {
 	@Column(nullable = false, updatable = false, insertable = false)
 	@ColumnDefault(value = "CURRENT_TIMESTAMP")
 	private Date createAt;
+
+	public void updateStock(int qty) {
+		if (this.stock < qty) {
+			throw new IllegalArgumentException("Insufficient stock for product: " + this.productId);
+		}
+		this.stock -= qty;
+	}
 }
