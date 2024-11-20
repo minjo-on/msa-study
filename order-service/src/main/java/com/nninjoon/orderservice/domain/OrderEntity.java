@@ -40,7 +40,7 @@ public class OrderEntity implements Serializable {
 	@Column(nullable = false, unique = true)
 	private String orderId;
 
-	@Column(nullable = false, updatable = false)
+	@Column(nullable = false, updatable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime createdAt;
 
 	public static OrderEntity create(String productId, Integer qty, Integer unitPrice, Integer totalPrice, String userId, String orderId) {

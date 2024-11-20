@@ -26,4 +26,15 @@ public record OrderDto(
 			.userId(order.getUserId())
 			.build();
 	}
+
+	public static OrderDto of(String productId, Integer qty, Integer unitPrice, String orderId, String userId) {
+		return OrderDto.builder()
+			.productId(productId)
+			.qty(qty)
+			.unitPrice(unitPrice)
+			.totalPrice(unitPrice * qty)
+			.orderId(orderId)
+			.userId(userId)
+			.build();
+	}
 }

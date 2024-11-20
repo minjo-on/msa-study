@@ -12,7 +12,6 @@ import org.springframework.web.client.RestTemplate;
 import com.nninjoon.userservice.error.FeignErrorDecoder;
 
 import feign.Logger;
-import feign.codec.ErrorDecoder;
 
 @SpringBootApplication
 @EnableDiscoveryClient

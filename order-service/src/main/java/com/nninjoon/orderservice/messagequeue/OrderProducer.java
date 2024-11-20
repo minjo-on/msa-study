@@ -3,6 +3,7 @@ package com.nninjoon.orderservice.messagequeue;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,14 +14,14 @@ import com.nninjoon.orderservice.dto.OrderDto;
 import com.nninjoon.orderservice.dto.Payload;
 import com.nninjoon.orderservice.dto.Schema;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-//import org.springframework.kafka.core.KafkaTemplate;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class OrderProducer {
-	//    private KafkaTemplate<String, String> kafkaTemplate;
+	private final KafkaTemplate<String, String> kafkaTemplate;
 
 	List<Field> fields = Arrays.asList(new Field("string", true, "order_id"),
 		Field.of("string", true, "user_id"),
@@ -28,17 +29,13 @@ public class OrderProducer {
 		Field.of("int32", true, "qty"),
 		Field.of("int32", true, "unit_price"),
 		Field.of("int32", true, "total_price"));
+
 	Schema schema = Schema.builder()
 		.type("struct")
 		.fields(fields)
 		.optional(false)
 		.name("orders")
 		.build();
-
-	//    @Autowired
-	//    public OrderProducer(KafkaTemplate<String, String> kafkaTemplate) {
-	//        this.kafkaTemplate = kafkaTemplate;
-	//    }
 
 	public OrderDto send(String topic, OrderDto orderDto) {
 		Payload payload = Payload.builder()
@@ -53,6 +50,7 @@ public class OrderProducer {
 		KafkaOrderDto kafkaOrderDto = KafkaOrderDto.of(schema, payload);
 
 		ObjectMapper mapper = new ObjectMapper();
+
 		String jsonInString = "";
 		try {
 			jsonInString = mapper.writeValueAsString(kafkaOrderDto);
@@ -60,7 +58,7 @@ public class OrderProducer {
 			ex.printStackTrace();
 		}
 
-		//        kafkaTemplate.send(topic, jsonInString);
+		kafkaTemplate.send(topic, jsonInString);
 		log.info("Order Producer sent data from the Order microservice: " + kafkaOrderDto);
 
 		return orderDto;

@@ -28,4 +28,15 @@ public record ResponseOrder(
 			.orderId(orderEntity.getOrderId())
 			.build();
 	}
+
+	public static ResponseOrder of(String productId, Integer qty, Integer unitPrice, String orderId) {
+		return ResponseOrder.builder()
+			.productId(productId)
+			.qty(qty)
+			.unitPrice(unitPrice)
+			.totalPrice(qty * unitPrice)
+			.createdAt(LocalDateTime.now())
+			.orderId(orderId)
+			.build();
+	}
 }

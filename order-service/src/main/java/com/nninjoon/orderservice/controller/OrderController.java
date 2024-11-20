@@ -2,6 +2,7 @@ package com.nninjoon.orderservice.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -47,10 +48,9 @@ public class OrderController {
 
 		log.info("Before add orders data");
 		/* jpa */
-		OrderEntity orderEntity = orderService.createOrder(request, userId);
-
-		OrderDto orderDto = OrderDto.from(orderEntity);
-		ResponseOrder responseOrder = ResponseOrder.from(orderEntity);
+		// OrderEntity orderEntity = orderService.createOrder(request, userId);
+		String orderId = UUID.randomUUID().toString();
+		OrderDto orderDto = OrderDto.of(request.productId(), request.qty(), request.unitPrice(), orderId, userId);
 
 		/* kafka */
 		/* send this order to the kafka */
@@ -58,6 +58,7 @@ public class OrderController {
 		orderProducer.send("orders", orderDto);
 
 		log.info("After added orders data");
+		ResponseOrder responseOrder = ResponseOrder.of(request.productId(), request.qty(), request.unitPrice(), orderId);
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseOrder);
 	}
 
